@@ -1,11 +1,11 @@
 /**
     Convolução - Trabalho 1
-    
-ANA CRISTINA SILVA DE OLIVEIRA 11965630
-DAVI FAGUNDES FERREIRA DA SILVA 12544013
-EDUARDO BARROSO RIBEIRO FERNANDES 12681733
-LUCAS DA SILVA CLAROS 12682592
-VITOR AMORIM FROIS 12543440
+        
+    ANA CRISTINA SILVA DE OLIVEIRA 11965630
+    DAVI FAGUNDES FERREIRA DA SILVA 12544013
+    EDUARDO BARROSO RIBEIRO FERNANDES 12681733
+    LUCAS DA SILVA CLAROS 12682592
+    VITOR AMORIM FROIS 12543440
 
 **/
 
@@ -67,7 +67,6 @@ int main(){
         for (int i = start_row; i < end_row; i++) {
             for (int j = 0; j < N; j++) {
                 float sum = 0;
-                #pragma omp simd reduction(+: sum)
                 for (int k = 0; k < M; k++) {
                     for (int l = 0; l < M; l++) {
                         sum += matrix[i + k][j + l] * kernel[k][l];
@@ -80,9 +79,10 @@ int main(){
 
     // Calculate the minimum and maximum value using reduction clause
     int min_value = 255, max_value = 0;
-    #pragma omp parallel for reduction(min: min_value) reduction(max: max_value)
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
+    int i, j;
+    #pragma omp parallel for collapse(2) private(i, j) reduction(min: min_value) reduction(max: max_value)
+    for (i = 0; i < N; i++) {
+        for (j = 0; j < N; j++) {
             if (newMatrix[i][j] < min_value) {
                 min_value = newMatrix[i][j];
             }else if (newMatrix[i][j] > max_value) {
