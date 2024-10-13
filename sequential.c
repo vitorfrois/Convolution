@@ -3,8 +3,8 @@
     
     Ana Cristina 
     Davi Fagundes
-    Eduardo Fernandes
-    Lucas Claros
+    Eduardo Fernandes - 12681733
+    Lucas Claros - 12682592
     Vítor Fróis - 12543440
 **/
 
