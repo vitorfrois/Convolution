@@ -10,9 +10,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
 #include <omp.h>
-#include <limits.h>
 
 int main(){
     int **matrix;
