@@ -1,8 +1,8 @@
 /**
     Convolução - Trabalho 1
     
-    Ana Cristina 
-    Davi Fagundes
+    Ana Cristina - 11965630
+    Davi Fagundes - 12544013
     Eduardo Fernandes - 12681733
     Lucas Claros - 12682592
     Vítor Fróis - 12543440
