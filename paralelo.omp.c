@@ -67,7 +67,7 @@ int main(){
     for (int i = 0; i < N; i++)
         newMatrix[i] = (float *)malloc(N * sizeof(float)); 
 
-    #pragma omp parallel for collapse(2)
+    #pragma omp parallel for collapse(2) num_threads(omp_get_max_threads())
     for(int i = paddingSize; i < N + paddingSize; i++) {
         for(int j = paddingSize; j < N + paddingSize; j++) {
             float sum = 0;
