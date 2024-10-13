@@ -1,3 +1,13 @@
+/**
+    Convolução - Trabalho 1
+    
+    Ana Cristina 
+    Davi Fagundes
+    Eduardo Fernandes - 12681733
+    Lucas Claros - 12682592
+    Vítor Fróis - 12543440
+**/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -42,36 +52,34 @@ int main(){
     for (int i = 0; i < N; i++)
         newMatrix[i] = (float *)malloc(N * sizeof(float)); 
 
+
     #pragma omp parallel
     {
-        // Determinar o número de threads
         int thread_id = omp_get_thread_num();
         int num_threads = omp_get_num_threads();
+        int is_last_thread = thread_id == num_threads - 1;
 
-        // Divisão da matriz em blocos
-        int block_height = N / num_threads; // Altura do bloco
-
-        // Determinar o intervalo de linhas que esta thread vai processar
+        // Start block decomposition
+        // Determine the row range that this thread will process
+        int block_height = N / num_threads;
         int start_row = thread_id * block_height;
-        int end_row = (thread_id == num_threads - 1) ? N : start_row + block_height;
+        int end_row = is_last_thread ? N : start_row + block_height;
 
-        // Cada thread processa seu bloco
         for (int i = start_row; i < end_row; i++) {
             for (int j = 0; j < N; j++) {
-                float sum = 0.0;
-                // Aplicação do kernel
+                float sum = 0;
+                #pragma omp simd reduction(+: sum)
                 for (int k = 0; k < M; k++) {
                     for (int l = 0; l < M; l++) {
                         sum += matrix[i + k][j + l] * kernel[k][l];
                     }
                 }
-                // Armazenar o resultado na nova matriz
                 newMatrix[i][j] = sum < 255 ? (int)sum : 255;
             }
         }
     }
 
-    // Calcular o valor mínimo e máximo da matriz resultante
+    // Calculate the minimum and maximum value using reduction clause
     int min_value = 255, max_value = 0;
     #pragma omp parallel for reduction(min: min_value) reduction(max: max_value)
     for (int i = 0; i < N; i++) {
@@ -83,7 +91,6 @@ int main(){
             }
         }
     }
-
 
     printf("%d %d\n", max_value, min_value);
 
