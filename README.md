@@ -1,6 +1,8 @@
 # Convolução
 Implementação da operação de Convolução utilizando OMP
 
+Trabalho realizado durante a disciplina de Computação de Alto Desempenho por Ana Cristina de Oliveira, Davi Fagundes, Eduardo Fernandes, Lucas Claros e Vítor Fróis.
+
 ## Metodologia PCAM
 A metodologia PCAM para desenvolvimento de código paralelo foi aplicada para obter um código com maior velocidade e é realizada em quatro etapas.
 
