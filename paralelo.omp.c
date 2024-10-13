@@ -67,17 +67,32 @@ int main(){
     for (int i = 0; i < N; i++)
         newMatrix[i] = (float *)malloc(N * sizeof(float)); 
 
-    #pragma omp parallel for collapse(2) num_threads(omp_get_max_threads())
-    for(int i = paddingSize; i < N + paddingSize; i++) {
-        for(int j = paddingSize; j < N + paddingSize; j++) {
-            float sum = 0;
-            #pragma omp parallel for collapse(2) reduction(+:sum)
-            for(int k = 0; k < M; k++) {
-                for(int l = 0; l < M; l++) {
-                    sum += matrix[i - paddingSize + k][j - paddingSize + l] * kernel[k][l];
+    #pragma omp parallel
+    {
+        // Determinar o número de threads
+        int thread_id = omp_get_thread_num();
+        int num_threads = omp_get_num_threads();
+
+        // Divisão da matriz em blocos
+        int block_height = N / num_threads; // Altura do bloco
+
+        // Determinar o intervalo de linhas que esta thread vai processar
+        int start_row = thread_id * block_height;
+        int end_row = (thread_id == num_threads - 1) ? N : start_row + block_height;
+
+        // Cada thread processa seu bloco
+        for (int i = start_row; i < end_row; i++) {
+            for (int j = 0; j < N; j++) {
+                float sum = 0.0;
+                // Aplicação do kernel
+                for (int k = 0; k < M; k++) {
+                    for (int l = 0; l < M; l++) {
+                        sum += matrix[i + k][j + l] * kernel[k][l];
+                    }
                 }
+                // Armazenar o resultado na nova matriz
+                newMatrix[i][j] = sum < 255 ? (int)sum : 255;
             }
-            newMatrix[i - paddingSize][j - paddingSize] = sum < 255 ? (int) sum : 255;
         }
     }
 
