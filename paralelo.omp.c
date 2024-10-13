@@ -3,31 +3,6 @@
 #include <math.h>
 #include <omp.h>
 #include <limits.h>
-#define MIN_(a,b) ((a)<(b)?(a):(b))
-#define MAX_(a,b) ((a)>(b)?(a):(b))
-
-// Função que aplica o filtro (kernel) em um elemento de uma submatriz
-void apply_filter_element(int N, int M, float** kernel, int** img, int** result, int i, int j) {
-    int half_M = M / 2;
-    double sum = 0.0;
-
-    // Aplicação do kernel em torno do elemento [i][j]
-    for (int ki = 0; ki < M; ki++) {
-        for (int kj = 0; kj < M; kj++) {
-            int img_x = i + ki - half_M;
-            int img_y = j + kj - half_M;
-
-            // Verifica se o ponto da imagem está dentro dos limites
-            if (img_x >= 0 && img_x < N && img_y >= 0 && img_y < N) {
-                sum += img[img_x][img_y] * kernel[ki][kj];
-            }
-        }
-    }
-
-    // Truncar o resultado e limitar ao intervalo [0, 255]
-    int truncated_result = (int)round(sum);
-    result[i][j] = MIN_(MAX_(truncated_result, 0), 255);
-}
 
 int main(){
     int **matrix;
