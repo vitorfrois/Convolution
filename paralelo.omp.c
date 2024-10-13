@@ -67,11 +67,11 @@ int main(){
     for (int i = 0; i < N; i++)
         newMatrix[i] = (float *)malloc(N * sizeof(float)); 
 
-    float sum = 0;
-    #pragma omp parallel for collapse(2) private(sum)
+    #pragma omp parallel for collapse(2)
     for(int i = paddingSize; i < N + paddingSize; i++) {
         for(int j = paddingSize; j < N + paddingSize; j++) {
-            // #pragma omp parallel for collapse(2) reduction(+:sum)
+            float sum = 0;
+            #pragma omp parallel for collapse(2) reduction(+:sum)
             for(int k = 0; k < M; k++) {
                 for(int l = 0; l < M; l++) {
                     sum += matrix[i - paddingSize + k][j - paddingSize + l] * kernel[k][l];
@@ -94,35 +94,7 @@ int main(){
         }
     }
 
-    // Print matrix with padding
-    for(int i = 0; i < paddedMatrixSize; i++){
-        for(int j = 0; j < paddedMatrixSize; j++){
-            printf("%3d ", matrix[i][j]);        
-        }
-        printf("\n");
-    }
-    printf("\n");
 
-
-    // Print kernel
-    for(int i = 0; i < M; i++){
-        for(int j = 0; j < M; j++){
-            printf("%1.1f ", kernel[i][j]);        
-        }
-        printf("\n");
-    }
-    printf("\n");
-
-    // Print newMatrix
-    for(int i = 0; i < N; i++){
-        for(int j = 0; j < N; j++){
-            printf("%3.0f ", newMatrix[i][j]);        
-        }
-        printf("\n");
-    }
-    printf("\n");
-    printf("\n");
-    printf("\n");
     printf("%d %d\n", max_value, min_value);
 
     // Free allocated space
